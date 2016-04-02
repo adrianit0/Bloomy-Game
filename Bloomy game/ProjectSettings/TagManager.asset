@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags: []
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - Personaje
+  - Enemigo
+  - Objeto
+  - Bala
+  - SelectableItem
+  - Escenario
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Fondo
+    uniqueID: 1836845817
+    locked: 0
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Escenario
+    uniqueID: 1598180431
+    locked: 0
+  - name: Objetos
+    uniqueID: 3055599601
+    locked: 0
+  - name: Enemigos
+    uniqueID: 3924918981
+    locked: 0
+  - name: Personaje
+    uniqueID: 3569525437
+    locked: 0
+  - name: Balas
+    uniqueID: 1359473171
+    locked: 0
+  - name: GUI
+    uniqueID: 4270160453
+    locked: 0

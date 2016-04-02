@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbeb3b5f504007a4eb948a7acbb1f93c, type: 3}
+  m_Name: items
+  m_EditorClassIdentifier: 
+  armas:
+  - nombre: "Fuego peque\xF1o"
+    weaponPrefab: {fileID: 162094, guid: 97ab36f575547b14ca73efc66b1601ff, type: 2}
+    weaponIcon: {fileID: 21300000, guid: 70331412fbab46c49955aca85c5a37e3, type: 3}
+  - nombre: Fuego grande
+    weaponPrefab: {fileID: 177364, guid: 1e9d0065f32eabe4bb04d3dbeadbaf55, type: 2}
+    weaponIcon: {fileID: 21300000, guid: f221aedc4efab984e84867eea3dfc0e9, type: 3}
+  - nombre: Burbuja
+    weaponPrefab: {fileID: 141122, guid: 20e7329dc84d16b46b128462e76152ae, type: 2}
+    weaponIcon: {fileID: 21300000, guid: 1d129528defbc5d4da216859a8d2c899, type: 3}
+  - nombre: Agua
+    weaponPrefab: {fileID: 152710, guid: 04a19deff1ca7d64b8d9a6a8bf92d980, type: 2}
+    weaponIcon: {fileID: 21300000, guid: 2b8e3023579bae1479ae30474e590669, type: 3}
+  - nombre: "Bola energ\xEDa"
+    weaponPrefab: {fileID: 188482, guid: b440312d16aeb104e972d985f0c3c420, type: 2}
+    weaponIcon: {fileID: 21300000, guid: cf54d206d5204314e83d00bacb576b7a, type: 3}
+  - nombre: "Bola energ\xEDa mayor"
+    weaponPrefab: {fileID: 119940, guid: 941805e5b67365247a8ceef5d94525c9, type: 2}
+    weaponIcon: {fileID: 21300000, guid: e03ecacd23ffa354fae5736b8cdc2a87, type: 3}
+  - nombre: Arma legendaria
+    weaponPrefab: {fileID: 145998, guid: eb29b379369ae3649aa4b8bd61a891d0, type: 2}
+    weaponIcon: {fileID: 21300000, guid: a411b4bbbbf7692468d20776e78da48d, type: 3}
