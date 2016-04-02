@@ -59,7 +59,7 @@ public class Weapon : MonoBehaviour {
         Caja _box = coll.gameObject.GetComponent<Caja>();
 
         if (_char != null) {
-            if (bando != _char.bando) {
+            if (bando != _char.bando && _char.vivo) {
                 _char.InfligirDaño(daño);
                 DestruirBala();
             }

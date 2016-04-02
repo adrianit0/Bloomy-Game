@@ -25,6 +25,8 @@ public class Character : MonoBehaviour {
     public Sprite escudoNormal;
     public Sprite escudoDañado;
 
+    public Image marcoVida;
+    RectTransform marcoVidaTrans;
     public Image barraVida;
     public Image barraMana;
     public Image barraArma;
@@ -59,6 +61,10 @@ public class Character : MonoBehaviour {
         rigid = GetComponent<Rigidbody2D>();
         coll = GetComponent<BoxCollider2D>();
         anim = GetComponent<Animator>();
+
+        if (marcoVida!=null) {
+            marcoVidaTrans = marcoVida.GetComponent<RectTransform>();
+        }
     }
 
     void Start () {
@@ -69,6 +75,9 @@ public class Character : MonoBehaviour {
 
         if(GameManagerScript.gameManager != null)
             layer = GameManagerScript.gameManager.layerMaskGeneral;
+
+        if(marcoVida != null && bando > 0)
+            marcoVida.gameObject.SetActive(false);
     }
 
 	void FixedUpdate () {
@@ -103,6 +112,10 @@ public class Character : MonoBehaviour {
             dir = DIRECCION.Derecha;
 
         transform.localScale = new Vector3((dir == DIRECCION.Izquierda) ? 1 : -1, transform.localScale.y, transform.localScale.z);
+
+        if(marcoVida != null && bando > 0 && transform.localScale.x != marcoVidaTrans.localScale.x)
+            marcoVidaTrans.localScale = new Vector3(transform.localScale.x, marcoVidaTrans.localScale.y, marcoVidaTrans.localScale.z);
+
 
         anim.SetBool("Movement", mov != 0);
     }
@@ -149,6 +162,9 @@ public class Character : MonoBehaviour {
         if(cantidad < 0)
             cantidad = 0;
 
+        if(marcoVida != null && bando > 0 && !marcoVida.gameObject.activeSelf)
+            marcoVida.gameObject.SetActive(true);
+
         vidaActual = Mathf.Clamp(vidaActual - cantidad, 0, vidaMaxima);
         barraVida.fillAmount = (float) vidaActual / (float) vidaMaxima;
 
@@ -163,6 +179,11 @@ public class Character : MonoBehaviour {
 
     void Morir() {
         vivo = false;
+        anim.SetBool("Dying", true);
+        coll.enabled = true;
+
+        if(marcoVida != null && bando > 0 && marcoVida.gameObject.activeSelf)
+            marcoVida.gameObject.SetActive(false);
     }
 
     public void ConsumirMana (float cantidad) {
@@ -194,8 +215,8 @@ public class Character : MonoBehaviour {
         armaInicial = nuevaArma;
         WeaponInfo _info = GameManagerScript.gameManager.listaObjetos.armas[nuevaArma];
 
-        barraArma.sprite = _info.weaponIcon;
+        if (barraArma != null)
+            barraArma.sprite = _info.weaponIcon;
         balaPrefab = _info.weaponPrefab;
-        
     }
 }
