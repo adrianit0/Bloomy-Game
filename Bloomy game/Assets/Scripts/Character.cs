@@ -8,8 +8,9 @@ public enum DIRECCION { Izquierda, Derecha};
 [RequireComponent(typeof(BoxCollider2D))]
 [RequireComponent(typeof(Animator))]
 public class Character : MonoBehaviour {
-    
-    
+
+    public int ID;
+
     public int vidaMaxima = 100, vidaActual = 100;
     public float manaMaximo = 100, manaActual = 100;
     public float regMana = 10;
@@ -20,7 +21,11 @@ public class Character : MonoBehaviour {
     public float defensa = 0.9f;
 
     public bool vivo = true;
+    public bool manaInfinito = false;
 
+    public SpriteRenderer cuerpo;
+    public SpriteRenderer cara;
+    public SpriteRenderer mascara;
     public SpriteRenderer escudo;
     public Sprite escudoNormal;
     public Sprite escudoDañado;
@@ -40,7 +45,8 @@ public class Character : MonoBehaviour {
 
     float mov = 0;
     DIRECCION dir;
-    bool enSuelo = true;
+    [HideInInspector]
+    public bool enSuelo = true;
     bool enSueloInternal = false;
     bool atacando = false;
     bool defendiendo = false;
@@ -53,6 +59,13 @@ public class Character : MonoBehaviour {
     float deltaMana = 0.2f;
     LayerMask layer;
 
+    public AudioClip sonidoSaltar;
+    public AudioClip sonidoDisparo;
+    public AudioClip sonidoHit;
+    public AudioClip sonidoCubrir;
+    public AudioClip sonidoMorir;
+    AudioSource source;
+
     Rigidbody2D rigid;
     BoxCollider2D coll;
     Animator anim;
@@ -61,6 +74,7 @@ public class Character : MonoBehaviour {
         rigid = GetComponent<Rigidbody2D>();
         coll = GetComponent<BoxCollider2D>();
         anim = GetComponent<Animator>();
+        source = GetComponent<AudioSource>();
 
         if (marcoVida!=null) {
             marcoVidaTrans = marcoVida.GetComponent<RectTransform>();
@@ -72,9 +86,19 @@ public class Character : MonoBehaviour {
             InvokeRepeating("RegMana", 0, deltaMana);
 
         CambiarArma(armaInicial);
+        MirarHacia(-transform.localScale.x);
 
-        if(GameManagerScript.gameManager != null)
+        if(GameManagerScript.gameManager != null) {
             layer = GameManagerScript.gameManager.layerMaskGeneral;
+            if(GameManagerScript.gameManager.personajePrincipal == null && bando == 0)
+                GameManagerScript.gameManager.personajePrincipal = this.gameObject;
+        }
+
+        cuerpo.sortingOrder = ID * 5;
+        cara.sortingOrder = ID * 5 + 1;
+        mascara.sortingOrder = ID * 5 + 2;
+        escudo.sortingOrder = ID * 5 + 3;
+
 
         if(marcoVida != null && bando > 0)
             marcoVida.gameObject.SetActive(false);
@@ -98,39 +122,78 @@ public class Character : MonoBehaviour {
             anim.SetBool("Attack", false);
             atacando = false;
         }
+
+        if(transform.position.y < -20 && vivo)
+            Morir();
     }
 
     ///-1 izquierda
     /// 0 quieto
     /// 1 derecha
     public void Moverse (float direccion) {
+        if(!vivo)
+            return;
+
         mov = Mathf.Clamp(direccion, -1, 1);
 
-        if(mov < 0)
+        if(defendiendo && mov != 0)
+            Defender(false, true);
+
+        MirarHacia(mov);
+        
+        anim.SetBool("Movement", mov != 0);
+    }
+
+    public void MirarHacia (float direccion) {
+        if(!vivo)
+            return;
+
+        if(direccion < 0)
             dir = DIRECCION.Izquierda;
-        else if(mov > 0)
+        else if(direccion > 0)
             dir = DIRECCION.Derecha;
 
         transform.localScale = new Vector3((dir == DIRECCION.Izquierda) ? 1 : -1, transform.localScale.y, transform.localScale.z);
 
         if(marcoVida != null && bando > 0 && transform.localScale.x != marcoVidaTrans.localScale.x)
             marcoVidaTrans.localScale = new Vector3(transform.localScale.x, marcoVidaTrans.localScale.y, marcoVidaTrans.localScale.z);
-
-
-        anim.SetBool("Movement", mov != 0);
     }
 
     public void Saltar () {
-        if(enSuelo)
+        if(!vivo)
+            return;
+
+        if(defendiendo)
+            Defender(false, true);
+
+        if(enSuelo) {
             rigid.AddForce(Vector2.up * salto, ForceMode2D.Impulse);
+            source.clip = sonidoSaltar;
+            source.Play();
+        }
+            
     }
 
-    public void Defender () {
-
+    public void Defender (bool activado, bool force = false) {
+        if ((enSuelo && mov==0)||force) {
+            defendiendo = activado;
+            anim.SetBool("Protect", activado);
+            escudo.sprite = escudoNormal;
+            escudo.gameObject.SetActive(activado);
+        }
     }
 
     public void Disparar() {
+        if(!vivo)
+            return;
+
+        if(defendiendo)
+            Defender(false, true);
+
         if (lastTimeShot>timeNeededShot) {
+            source.clip = sonidoDisparo;
+            source.Play();
+
             GameObject _balaObj = (GameObject) Instantiate(balaPrefab, posicionArma.transform.position, Quaternion.identity);
             Weapon _balaScript = _balaObj.GetComponent<Weapon>();
 
@@ -155,18 +218,33 @@ public class Character : MonoBehaviour {
         }
     }
 
-    public void InfligirDaño (int cantidad) {
-        float def = (defendiendo) ? defensa : 1;
-        cantidad = Mathf.RoundToInt((float)cantidad * def);
+    public void InfligirDaño (Weapon bala) {
+        float def = 1;
+        
+
+        if(defendiendo && Mathf.Sign(bala.transform.localScale.x)!=Mathf.Sign(this.transform.localScale.x)) {
+            def = 1 - defensa;
+            anim.SetTrigger("Protecting");
+            escudo.sprite = escudoDañado;
+            ConsumirMana(10);
+        }
+
+        int cantidad = Mathf.RoundToInt((float)bala.daño * def);
 
         if(cantidad < 0)
             cantidad = 0;
 
-        if(marcoVida != null && bando > 0 && !marcoVida.gameObject.activeSelf)
+        source.clip = (defendiendo) ? sonidoCubrir : sonidoHit;
+        source.Play();
+
+        if(marcoVida != null && bando > 0 && !marcoVida.gameObject.activeSelf) {
             marcoVida.gameObject.SetActive(true);
+        }
 
         vidaActual = Mathf.Clamp(vidaActual - cantidad, 0, vidaMaxima);
         barraVida.fillAmount = (float) vidaActual / (float) vidaMaxima;
+
+        GetAggro(bala.origenBala);
 
         if(vidaActual == 0)
             Morir();
@@ -178,15 +256,27 @@ public class Character : MonoBehaviour {
     }
 
     void Morir() {
+        source.clip = sonidoMorir;
+        source.Play();
+
+        Moverse(0);
+        Defender(false, true);
+
         vivo = false;
         anim.SetBool("Dying", true);
         coll.enabled = true;
+
+        if (bando == 0 && GameManagerScript.gameManager != null) {
+            GameManagerScript.gameManager.FinPartida();
+        }
 
         if(marcoVida != null && bando > 0 && marcoVida.gameObject.activeSelf)
             marcoVida.gameObject.SetActive(false);
     }
 
     public void ConsumirMana (float cantidad) {
+        if(manaInfinito)
+            return;
         lastTimeMana = 0;
 
         manaActual = Mathf.Clamp (manaActual-cantidad, 0, manaMaximo);
@@ -196,12 +286,16 @@ public class Character : MonoBehaviour {
     }
 
     void RegMana () {
-        if(manaActual >= manaMaximo)
+        if(manaActual >= manaMaximo || defendiendo)
             return;
 
         float regPower = (lastTimeMana < 1) ? 0 : (lastTimeMana > 3) ? 1 : (lastTimeMana - 1) / 2;
+        
         if(regPower == 0)
             return;
+
+        if(mov != 0)
+            regPower /= 2;
 
         regPower = regMana * regPower * deltaMana;
         manaActual = Mathf.Clamp(manaActual + regPower, 0, manaMaximo);
@@ -218,5 +312,12 @@ public class Character : MonoBehaviour {
         if (barraArma != null)
             barraArma.sprite = _info.weaponIcon;
         balaPrefab = _info.weaponPrefab;
+    }
+
+    public void GetAggro (GameObject _objetivo) {
+        CharIA _ia = GetComponent<CharIA>();
+        if (_ia!=null) {
+            _ia.GetAggro(_objetivo);
+        }
     }
 }

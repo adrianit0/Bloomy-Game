@@ -6,7 +6,10 @@ public class Objeto : MonoBehaviour {
     public int objetoID = -1; //Si es inferior a -1 no será ninguno
     public int vidaRecuperada = 0;
 
+    public AudioClip clip;
+
     SpriteRenderer _render;
+
 
     void Awake () {
         _render = GetComponent<SpriteRenderer>();
@@ -41,6 +44,9 @@ public class Objeto : MonoBehaviour {
                     _char.CambiarArma(objetoID);
                 }
 
+                if (GameManagerScript.gameManager!=null) {
+                    GameManagerScript.gameManager.ReproducirSonido(clip);
+                }
                 Destruir();
             }
         }

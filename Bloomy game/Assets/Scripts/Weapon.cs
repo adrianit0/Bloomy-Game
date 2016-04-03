@@ -4,6 +4,7 @@ using System.Collections;
 public class Weapon : MonoBehaviour {
 
     public int daño = 10;
+    public float retroceso = 0;
     public float costeMana = 10f;
     public float delay = 0.5f;
     public int bando = 0;
@@ -12,6 +13,9 @@ public class Weapon : MonoBehaviour {
     
     public float tiempoMaximo = 3f;
     float tiempoActual = 0f;
+    public float distanciaMaxima = 10f; //La primera que se cumpla antes
+    Vector3 distanciaInicial;
+    
 
     public Sprite[] sprites = new Sprite[2];
     public int framePerSecond = 5;
@@ -30,10 +34,14 @@ public class Weapon : MonoBehaviour {
             InvokeRepeating("SpriteChange", 0, 1/(float)framePerSecond);
     }
 
+    void Start () {
+        distanciaInicial = this.transform.position;
+    }
+
     void Update () {
         tiempoActual += Time.deltaTime;
 
-        if (tiempoActual > tiempoMaximo) {
+        if (tiempoActual > tiempoMaximo || Vector3.Distance(distanciaInicial, transform.position)>distanciaMaxima) {
             DestruirBala();
         }
     }
@@ -60,10 +68,10 @@ public class Weapon : MonoBehaviour {
 
         if (_char != null) {
             if (bando != _char.bando && _char.vivo) {
-                _char.InfligirDaño(daño);
+                _char.InfligirDaño(this);
                 DestruirBala();
             }
-        } else if (_box != null) {
+        } else if (_box != null && bando == 0) {
             _box.RomperCaja();
             DestruirBala();
         }

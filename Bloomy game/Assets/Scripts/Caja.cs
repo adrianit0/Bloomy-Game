@@ -3,9 +3,13 @@ using System.Collections;
 
 public class Caja : MonoBehaviour {
 
+    public AudioClip clip;
     public ChanceInfo[] info;
 
     public void Destruir () {
+        if(GameManagerScript.gameManager != null) {
+            GameManagerScript.gameManager.ReproducirSonido(clip);
+        }
         Destroy(this.gameObject);
     }
 

@@ -1,43 +1,43 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &119940
+--- !u!1 &103654
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
-  - 4: {fileID: 451390}
-  - 212: {fileID: 21248980}
-  - 114: {fileID: 11431204}
-  - 61: {fileID: 6198310}
-  - 50: {fileID: 5086428}
+  - 4: {fileID: 453486}
+  - 212: {fileID: 21249550}
+  - 114: {fileID: 11443746}
+  - 61: {fileID: 6174132}
+  - 50: {fileID: 5091900}
   m_Layer: 11
-  m_Name: Bala 5 - Arcano mayor
+  m_Name: Bala 7 - osc
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &451390
+--- !u!4 &453486
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 119940}
+  m_GameObject: {fileID: 103654}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4, y: 0, z: 0}
+  m_LocalPosition: {x: -2.71576715, y: -.822088063, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!50 &5086428
+--- !u!50 &5091900
 Rigidbody2D:
   serializedVersion: 2
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 119940}
+  m_GameObject: {fileID: 103654}
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0
@@ -47,12 +47,12 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!61 &6198310
+--- !u!61 &6174132
 BoxCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 119940}
+  m_GameObject: {fileID: 103654}
   m_Enabled: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
@@ -60,36 +60,36 @@ BoxCollider2D:
   m_Offset: {x: -.000243663788, y: -.000416487455}
   serializedVersion: 2
   m_Size: {x: .693189621, y: .300733209}
---- !u!114 &11431204
+--- !u!114 &11443746
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 119940}
+  m_GameObject: {fileID: 103654}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 40561f0170dec37478915916284f0e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "da\xF1o": 30
+  "da\xF1o": 100
   retroceso: 0
-  costeMana: 20
-  delay: 1
+  costeMana: 0
+  delay: .75
   bando: 1
-  velocidad: 20
-  tiempoMaximo: 4
-  distanciaMaxima: 15
+  velocidad: 15
+  tiempoMaximo: 3
+  distanciaMaxima: 20
   sprites:
-  - {fileID: 21300000, guid: 5ce80b4748a69734dad96d15a4e9a4ae, type: 3}
-  - {fileID: 21300000, guid: f492a8b1da78f2d4fab301072cf7f86a, type: 3}
-  framePerSecond: 6
+  - {fileID: 21300000, guid: 209b2892f05a9494f92b12750b03408d, type: 3}
+  - {fileID: 21300000, guid: 0c19da81a9de9f542baa22c9b76a35b5, type: 3}
+  framePerSecond: 4
   origenBala: {fileID: 0}
---- !u!212 &21248980
+--- !u!212 &21249550
 SpriteRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 119940}
+  m_GameObject: {fileID: 103654}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -110,7 +110,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1359473171
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 5ce80b4748a69734dad96d15a4e9a4ae, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 209b2892f05a9494f92b12750b03408d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &100100000
 Prefab:
@@ -120,53 +120,49 @@ Prefab:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 0}
-      propertyPath: m_GravityScale
-      value: 0
-      objectReference: {fileID: 0}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 209b2892f05a9494f92b12750b03408d,
+        type: 3}
     - target: {fileID: 0}
       propertyPath: sprites.Array.data[0]
       value: 
-      objectReference: {fileID: 21300000, guid: 5ce80b4748a69734dad96d15a4e9a4ae,
+      objectReference: {fileID: 21300000, guid: 209b2892f05a9494f92b12750b03408d,
         type: 3}
     - target: {fileID: 0}
       propertyPath: sprites.Array.data[1]
       value: 
-      objectReference: {fileID: 21300000, guid: f492a8b1da78f2d4fab301072cf7f86a,
+      objectReference: {fileID: 21300000, guid: 0c19da81a9de9f542baa22c9b76a35b5,
         type: 3}
     - target: {fileID: 0}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 5ce80b4748a69734dad96d15a4e9a4ae,
-        type: 3}
-    - target: {fileID: 0}
-      propertyPath: "da\xF1o"
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: costeMana
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: delay
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: velocidad
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: tiempoMaximo
+      propertyPath: framePerSecond
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 0}
-      propertyPath: m_Layer
-      value: 11
+      propertyPath: velocidad
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: delay
+      value: .75
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: "da\xF1o"
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: costeMana
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: tiempoMaximo
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: distanciaMaxima
-      value: 15
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 119940}
+  m_RootGameObject: {fileID: 103654}
   m_IsPrefabParent: 1

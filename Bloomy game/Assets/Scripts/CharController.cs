@@ -25,7 +25,9 @@ public class CharController : MonoBehaviour {
         }
 
         if(Input.GetButtonDown("Protect")) {
-            personaje.Defender();
+            personaje.Defender(true);
+        }else if (Input.GetButtonUp ("Protect")) {
+            personaje.Defender(false);
         }
 
         if (movimiento != lastMovimiento) {

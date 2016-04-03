@@ -33,3 +33,12 @@ MonoBehaviour:
   - nombre: Arma legendaria
     weaponPrefab: {fileID: 145998, guid: eb29b379369ae3649aa4b8bd61a891d0, type: 2}
     weaponIcon: {fileID: 21300000, guid: a411b4bbbbf7692468d20776e78da48d, type: 3}
+  - nombre: "Oscuro peque\xF1o"
+    weaponPrefab: {fileID: 103654, guid: db4c40799114d294f8cd1fb97ca566ff, type: 2}
+    weaponIcon: {fileID: 21300000, guid: 209b2892f05a9494f92b12750b03408d, type: 3}
+  - nombre: Oscuro mediano
+    weaponPrefab: {fileID: 185952, guid: 21f4d87ae90b23b419e5793d86499bc6, type: 2}
+    weaponIcon: {fileID: 21300000, guid: 0faf0bb8b84355a439a2d567d68e63de, type: 3}
+  - nombre: Oscuro grande
+    weaponPrefab: {fileID: 184606, guid: e4f679c0b4ba3984fb22870e8300b5db, type: 2}
+    weaponIcon: {fileID: 21300000, guid: 3738d5487cbf54e4eb2899e136c80771, type: 3}
