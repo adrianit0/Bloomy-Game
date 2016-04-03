@@ -1519,10 +1519,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'Juego creado para el gameJam "Muerte instantanea".
-
-
-    Kidev team, todos los derechos reservados.'
+  m_Text: Juego creado para el gameJam "Muerte instantanea"..
 --- !u!222 &1114769309
 CanvasRenderer:
   m_ObjectHideFlags: 0

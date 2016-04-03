@@ -74,9 +74,9 @@ MonoBehaviour:
   "da\xF1o": 200
   retroceso: 0
   costeMana: 0
-  delay: 1.25
+  delay: 1.75
   bando: 1
-  velocidad: 20
+  velocidad: 15
   tiempoMaximo: 3
   distanciaMaxima: 20
   sprites:
@@ -102,9 +102,7 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -148,7 +146,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: delay
-      value: 1.25
+      value: 1.75
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: tiempoMaximo
@@ -157,6 +155,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: distanciaMaxima
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: velocidad
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

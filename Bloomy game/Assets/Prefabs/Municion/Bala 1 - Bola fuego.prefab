@@ -71,7 +71,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40561f0170dec37478915916284f0e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "da\xF1o": 35
+  "da\xF1o": 25
   retroceso: 0
   costeMana: 25
   delay: .75
@@ -102,9 +102,7 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -122,6 +120,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: distanciaMaxima
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: "da\xF1o"
+      value: 25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

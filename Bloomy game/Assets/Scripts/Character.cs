@@ -21,6 +21,8 @@ public class Character : MonoBehaviour {
     public float defensa = 0.9f;
 
     public bool vivo = true;
+    [HideInInspector]
+    public bool invencible = false;
     public bool manaInfinito = false;
 
     public SpriteRenderer cuerpo;
@@ -191,9 +193,6 @@ public class Character : MonoBehaviour {
             Defender(false, true);
 
         if (lastTimeShot>timeNeededShot) {
-            source.clip = sonidoDisparo;
-            source.Play();
-
             GameObject _balaObj = (GameObject) Instantiate(balaPrefab, posicionArma.transform.position, Quaternion.identity);
             Weapon _balaScript = _balaObj.GetComponent<Weapon>();
 
@@ -201,6 +200,9 @@ public class Character : MonoBehaviour {
                 _balaScript.DestruirBala();
                 return;
             }
+
+            source.clip = sonidoDisparo;
+            source.Play();
 
             lastTimeShot = 0;
             atacando = true;
@@ -219,8 +221,10 @@ public class Character : MonoBehaviour {
     }
 
     public void InfligirDaño (Weapon bala) {
+        if(invencible)
+            return;
+
         float def = 1;
-        
 
         if(defendiendo && Mathf.Sign(bala.transform.localScale.x)!=Mathf.Sign(this.transform.localScale.x)) {
             def = 1 - defensa;

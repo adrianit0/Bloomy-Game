@@ -8,6 +8,7 @@ public class GameManagerScript : MonoBehaviour {
 
     public GameObject canvasGameOver;
     public RectTransform panelGameOver;
+    public RectTransform panelVictoria;
 
     public LayerMask layerMaskGeneral;
     public LayerMask layerDetectionEnemigo;
@@ -37,8 +38,11 @@ public class GameManagerScript : MonoBehaviour {
     }
 
     public void FinPartida () {
-        StartCoroutine(GameOver());
-        
+        StartCoroutine(MostrarPanel(canvasGameOver, panelGameOver));
+    }
+
+    public void Victoria () {
+        StartCoroutine(MostrarPanel(canvasGameOver, panelVictoria));
     }
 
     public void ReproducirSonido (AudioClip sonido) {
@@ -46,11 +50,12 @@ public class GameManagerScript : MonoBehaviour {
         source.Play();
     }
 
-    IEnumerator GameOver () {
+    IEnumerator MostrarPanel (GameObject _rectCanvas, RectTransform _rectPanel) {
         yield return new WaitForSeconds (1);
         mainSource.Stop();
-        panelGameOver.localScale = Vector3.zero;
-        canvasGameOver.SetActive(true);
+        _rectPanel.localScale = Vector3.zero;
+        _rectPanel.gameObject.SetActive(true);
+        _rectCanvas.SetActive(true);
 
         float value = 0;
         float tam = 0;
@@ -58,7 +63,7 @@ public class GameManagerScript : MonoBehaviour {
         while(value < 1) {
             value += Time.deltaTime;
             tam = Mathf.Lerp(0, 1, value);
-            panelGameOver.localScale = new Vector3(tam, tam, tam);
+            _rectPanel.localScale = new Vector3(tam, tam, tam);
             yield return null;
         }
     }

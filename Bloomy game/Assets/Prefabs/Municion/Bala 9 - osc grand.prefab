@@ -71,10 +71,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40561f0170dec37478915916284f0e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "da\xF1o": 300
+  "da\xF1o": 250
   retroceso: 10
   costeMana: 0
-  delay: 1
+  delay: 2
   bando: 1
   velocidad: 20
   tiempoMaximo: 2.5
@@ -102,9 +102,7 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -136,7 +134,7 @@ Prefab:
         type: 3}
     - target: {fileID: 0}
       propertyPath: "da\xF1o"
-      value: 300
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: costeMana
@@ -144,7 +142,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: delay
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: tiempoMaximo
