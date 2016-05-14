@@ -11,34 +11,123 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbeb3b5f504007a4eb948a7acbb1f93c, type: 3}
   m_Name: items
   m_EditorClassIdentifier: 
+  bestiario:
+  - nombreClave: 
+    nombres: []
+    colorCuerpo: []
+    spriteCara: []
+    spriteMascara: []
+    ataque: 0
+    fortaleza: 0
+    proteccion: 0
+    mana: 0
+    energia: 0
+    agilidad: 0
+    porcVida: 0
+    "porcDa\xF1o": 0
   armas:
   - nombre: "Fuego peque\xF1o"
+    disponible: 1
+    icono: {fileID: 21300004, guid: 2e050de438192494287e21e73d74e886, type: 3}
     weaponPrefab: {fileID: 162094, guid: 97ab36f575547b14ca73efc66b1601ff, type: 2}
-    weaponIcon: {fileID: 21300000, guid: 70331412fbab46c49955aca85c5a37e3, type: 3}
   - nombre: Fuego grande
+    disponible: 1
+    icono: {fileID: 21300006, guid: 2e050de438192494287e21e73d74e886, type: 3}
     weaponPrefab: {fileID: 177364, guid: 1e9d0065f32eabe4bb04d3dbeadbaf55, type: 2}
-    weaponIcon: {fileID: 21300000, guid: f221aedc4efab984e84867eea3dfc0e9, type: 3}
   - nombre: Burbuja
+    disponible: 1
+    icono: {fileID: 21300002, guid: 2e050de438192494287e21e73d74e886, type: 3}
     weaponPrefab: {fileID: 141122, guid: 20e7329dc84d16b46b128462e76152ae, type: 2}
-    weaponIcon: {fileID: 21300000, guid: 1d129528defbc5d4da216859a8d2c899, type: 3}
   - nombre: Agua
+    disponible: 1
+    icono: {fileID: 21300000, guid: 2e050de438192494287e21e73d74e886, type: 3}
     weaponPrefab: {fileID: 152710, guid: 04a19deff1ca7d64b8d9a6a8bf92d980, type: 2}
-    weaponIcon: {fileID: 21300000, guid: 2b8e3023579bae1479ae30474e590669, type: 3}
   - nombre: "Bola energ\xEDa"
+    disponible: 1
+    icono: {fileID: 21300000, guid: a94e9346e4f96e94a87f3ab07073f7f4, type: 3}
     weaponPrefab: {fileID: 188482, guid: b440312d16aeb104e972d985f0c3c420, type: 2}
-    weaponIcon: {fileID: 21300000, guid: cf54d206d5204314e83d00bacb576b7a, type: 3}
   - nombre: "Bola energ\xEDa mayor"
+    disponible: 1
+    icono: {fileID: 21300002, guid: a94e9346e4f96e94a87f3ab07073f7f4, type: 3}
     weaponPrefab: {fileID: 119940, guid: 941805e5b67365247a8ceef5d94525c9, type: 2}
-    weaponIcon: {fileID: 21300000, guid: e03ecacd23ffa354fae5736b8cdc2a87, type: 3}
   - nombre: Arma legendaria
+    disponible: 1
+    icono: {fileID: 21300004, guid: a94e9346e4f96e94a87f3ab07073f7f4, type: 3}
     weaponPrefab: {fileID: 145998, guid: eb29b379369ae3649aa4b8bd61a891d0, type: 2}
-    weaponIcon: {fileID: 21300000, guid: a411b4bbbbf7692468d20776e78da48d, type: 3}
   - nombre: "Oscuro peque\xF1o"
+    disponible: 0
+    icono: {fileID: 21300000, guid: a9f5a039b3c6c8a47ae706644a4d0b2a, type: 3}
     weaponPrefab: {fileID: 103654, guid: db4c40799114d294f8cd1fb97ca566ff, type: 2}
-    weaponIcon: {fileID: 21300000, guid: 209b2892f05a9494f92b12750b03408d, type: 3}
   - nombre: Oscuro mediano
+    disponible: 0
+    icono: {fileID: 21300004, guid: a9f5a039b3c6c8a47ae706644a4d0b2a, type: 3}
     weaponPrefab: {fileID: 185952, guid: 21f4d87ae90b23b419e5793d86499bc6, type: 2}
-    weaponIcon: {fileID: 21300000, guid: 0faf0bb8b84355a439a2d567d68e63de, type: 3}
   - nombre: Oscuro grande
+    disponible: 0
+    icono: {fileID: 21300002, guid: a9f5a039b3c6c8a47ae706644a4d0b2a, type: 3}
     weaponPrefab: {fileID: 184606, guid: e4f679c0b4ba3984fb22870e8300b5db, type: 2}
-    weaponIcon: {fileID: 21300000, guid: 3738d5487cbf54e4eb2899e136c80771, type: 3}
+  espadas:
+  - nombre: Sin arma
+    disponible: 1
+    icono: {fileID: 21300006, guid: a9f5a039b3c6c8a47ae706644a4d0b2a, type: 3}
+    spriteArma:
+    - {fileID: 21300000, guid: 28586ae1ae118ff4897d4bd80d3f3bde, type: 3}
+    - {fileID: 21300002, guid: 28586ae1ae118ff4897d4bd80d3f3bde, type: 3}
+    - {fileID: 21300004, guid: 28586ae1ae118ff4897d4bd80d3f3bde, type: 3}
+    - {fileID: 21300006, guid: 28586ae1ae118ff4897d4bd80d3f3bde, type: 3}
+  - nombre: Daga
+    disponible: 1
+    icono: {fileID: 21300000, guid: 32638d18427235c4aaac196e28378ec1, type: 3}
+    spriteArma:
+    - {fileID: 21300000, guid: af2b1c1e2b114a94486beb351ad01b8e, type: 3}
+    - {fileID: 21300002, guid: af2b1c1e2b114a94486beb351ad01b8e, type: 3}
+    - {fileID: 21300004, guid: af2b1c1e2b114a94486beb351ad01b8e, type: 3}
+    - {fileID: 21300006, guid: af2b1c1e2b114a94486beb351ad01b8e, type: 3}
+  - nombre: Espada de fuego
+    disponible: 1
+    icono: {fileID: 21300002, guid: 32638d18427235c4aaac196e28378ec1, type: 3}
+    spriteArma:
+    - {fileID: 21300000, guid: 1a10e97696d6ab84badd3a743d16b3b6, type: 3}
+    - {fileID: 21300002, guid: 1a10e97696d6ab84badd3a743d16b3b6, type: 3}
+    - {fileID: 21300004, guid: 1a10e97696d6ab84badd3a743d16b3b6, type: 3}
+    - {fileID: 21300006, guid: 1a10e97696d6ab84badd3a743d16b3b6, type: 3}
+  - nombre: Espada de agua
+    disponible: 1
+    icono: {fileID: 21300004, guid: 32638d18427235c4aaac196e28378ec1, type: 3}
+    spriteArma:
+    - {fileID: 21300000, guid: 85a32967613142a4cbdce1a0b3d05678, type: 3}
+    - {fileID: 21300002, guid: 85a32967613142a4cbdce1a0b3d05678, type: 3}
+    - {fileID: 21300004, guid: 85a32967613142a4cbdce1a0b3d05678, type: 3}
+    - {fileID: 21300006, guid: 85a32967613142a4cbdce1a0b3d05678, type: 3}
+  - nombre: Espada de luz
+    disponible: 1
+    icono: {fileID: 21300006, guid: 32638d18427235c4aaac196e28378ec1, type: 3}
+    spriteArma:
+    - {fileID: 21300000, guid: 478eed928763f4341942019d78115213, type: 3}
+    - {fileID: 21300002, guid: 478eed928763f4341942019d78115213, type: 3}
+    - {fileID: 21300004, guid: 478eed928763f4341942019d78115213, type: 3}
+    - {fileID: 21300006, guid: 478eed928763f4341942019d78115213, type: 3}
+  - nombre: Espada oscura
+    disponible: 0
+    icono: {fileID: 21300000, guid: f3fdfa1733ae3284d8f859a5f09563e5, type: 3}
+    spriteArma:
+    - {fileID: 21300000, guid: 0343009dc7a3300419a02e5534870964, type: 3}
+    - {fileID: 21300002, guid: 0343009dc7a3300419a02e5534870964, type: 3}
+    - {fileID: 21300004, guid: 0343009dc7a3300419a02e5534870964, type: 3}
+    - {fileID: 21300006, guid: 0343009dc7a3300419a02e5534870964, type: 3}
+  - nombre: Garra
+    disponible: 1
+    icono: {fileID: 21300002, guid: f3fdfa1733ae3284d8f859a5f09563e5, type: 3}
+    spriteArma:
+    - {fileID: 21300000, guid: 1980734539378f64ea4a1f560641c481, type: 3}
+    - {fileID: 21300002, guid: 1980734539378f64ea4a1f560641c481, type: 3}
+    - {fileID: 21300004, guid: 1980734539378f64ea4a1f560641c481, type: 3}
+    - {fileID: 21300006, guid: 1980734539378f64ea4a1f560641c481, type: 3}
+  - nombre: "L\xE1tigo"
+    disponible: 1
+    icono: {fileID: 21300004, guid: f3fdfa1733ae3284d8f859a5f09563e5, type: 3}
+    spriteArma:
+    - {fileID: 21300000, guid: 39cee3d77b0889e4eb64cd9200ff8035, type: 3}
+    - {fileID: 21300002, guid: 39cee3d77b0889e4eb64cd9200ff8035, type: 3}
+    - {fileID: 21300004, guid: 39cee3d77b0889e4eb64cd9200ff8035, type: 3}
+    - {fileID: 21300006, guid: 39cee3d77b0889e4eb64cd9200ff8035, type: 3}

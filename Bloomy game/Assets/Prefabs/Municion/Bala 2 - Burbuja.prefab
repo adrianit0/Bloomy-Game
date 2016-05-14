@@ -71,14 +71,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40561f0170dec37478915916284f0e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "da\xF1o": 5
-  retroceso: 0
-  costeMana: 4
-  delay: .25
+  "da\xF1o": 20
+  retroceso: 1
+  costeMana: 2
+  delay: .400000006
   bando: 1
-  velocidad: 6
+  velocidad: 8
   tiempoMaximo: 2.5
-  distanciaMaxima: 8
+  distanciaMaxima: 12
   sprites:
   - {fileID: 21300000, guid: 5632c936c173c2a4aab279ddaf961df9, type: 3}
   - {fileID: 21300000, guid: 82939b93a44bc1e4389a265405cebfd7, type: 3}
@@ -102,9 +102,7 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -121,11 +119,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: costeMana
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: "da\xF1o"
-      value: 5
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: tiempoMaximo
@@ -133,7 +131,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: velocidad
-      value: 6
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_Layer
@@ -141,7 +139,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: distanciaMaxima
-      value: 8
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: delay
+      value: .400000006
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: retroceso
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

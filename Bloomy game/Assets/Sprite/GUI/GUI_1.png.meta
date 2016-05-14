@@ -94,7 +94,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 2, y: 1, z: 2, w: 1}
-  spritePackingTag: 
+  spritePackingTag: spriteSheet
   userData: 
   assetBundleName: 
   assetBundleVariant: 

@@ -17,7 +17,7 @@ public class Objeto : MonoBehaviour {
 
     void Start () {
         if (GameManagerScript.gameManager != null && _render != null && objetoID > 0) {
-            _render.sprite = GameManagerScript.gameManager.listaObjetos.armas[objetoID].weaponIcon;
+            _render.sprite = GameManagerScript.gameManager.listaObjetos.armas[objetoID].icono;
         }
         GetComponent<Rigidbody2D>().AddForce(Vector2.up * 1, ForceMode2D.Impulse);
     }
@@ -26,7 +26,7 @@ public class Objeto : MonoBehaviour {
         objetoID = id;
         vidaRecuperada = vidaCurada;
         if(GameManagerScript.gameManager != null && _render != null && objetoID > 0) {
-            _render.sprite = GameManagerScript.gameManager.listaObjetos.armas[objetoID].weaponIcon;
+            _render.sprite = GameManagerScript.gameManager.listaObjetos.armas[objetoID].icono;
         }
     }
 
@@ -39,9 +39,9 @@ public class Objeto : MonoBehaviour {
 
         if(_char != null) {
             if(_char.bando == 0) {
-                _char.CurarVida(vidaRecuperada);
+                _char.CurarVida(vidaRecuperada, true);
                 if(objetoID > 0) {
-                    _char.CambiarArma(objetoID);
+                    _char.CambiarArma(TipoArma.Magia, objetoID);
                 }
 
                 if (GameManagerScript.gameManager!=null) {

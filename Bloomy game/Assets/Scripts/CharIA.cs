@@ -5,6 +5,8 @@ public enum ESTADOENEMIGO { Pacifico, Agresivo};
 
 public class CharIA : MonoBehaviour {
 
+    public bool interactable = true;
+
     public float vision = 15;           //Distancia con la que buscará al personaje
     public float posicionMaxima = 8;    //Distancia entre el objetivo y este personaje
     public float distanciaReposo = 50;  //Distancia con la que quedará en reposo si está muy lejos del personaje.
@@ -55,8 +57,8 @@ public class CharIA : MonoBehaviour {
     }
 
     void GetCharacter () {
-        if(GameManagerScript.gameManager != null && GameManagerScript.gameManager.personajePrincipal != null) {
-            personajePrincipal = GameManagerScript.gameManager.personajePrincipal;
+        if(GameManagerScript.gameManager != null && GameManagerScript.gameManager.personajes != null) {
+            personajePrincipal = GameManagerScript.gameManager.personajes[0];
             layervision = GameManagerScript.gameManager.layerDetectionEnemigo;
         }
     }

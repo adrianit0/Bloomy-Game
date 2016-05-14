@@ -6,44 +6,52 @@ public enum DIRECCION { Izquierda, Derecha};
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(BoxCollider2D))]
-[RequireComponent(typeof(Animator))]
 public class Character : MonoBehaviour {
 
     public int ID;
 
-    public int vidaMaxima = 100, vidaActual = 100;
-    public float manaMaximo = 100, manaActual = 100;
-    public float regMana = 10;
     public int bando = 0;
 
-    public float velocidad = 1;
-    public float salto = 1;
-    public float defensa = 0.9f;
+    public int nivel;       //NIVEL MAXIMO = 60
+    public int experiencia; //EXPERIENCIA
+    [Range(0, 10)]
+    public int ataque, fortaleza, proteccion, mana, energia, agilidad;
 
+    float dañoBase = 1f, retrocesoBase = 1f;
+    float vidaMaxima = 100, vidaActual = 100, vidaACurar = 0, regVida = 5;
+    float manaMaximo = 100, manaActual = 100, regMana = 20;
+    float energiaMaximo = 100, energiaActual = 100, regEnergia = 10;
+    float defensa = 0.4f, costeEscudo = 20, costeGolpeEscudo = 10;
+    float velocidad = 3.6f, salto = 12, velocidadAtaque = 1f, delayHechizo = 1f;
+
+    public bool interactable = true;
+    bool internalInteractable = false;
     public bool vivo = true;
-    [HideInInspector]
     public bool invencible = false;
     public bool manaInfinito = false;
 
     public SpriteRenderer cuerpo;
     public SpriteRenderer cara;
     public SpriteRenderer mascara;
+    public SpriteRenderer espada;
     public SpriteRenderer escudo;
     public Sprite escudoNormal;
     public Sprite escudoDañado;
 
+    Color[] colorEquipo = new Color[3];
+
     public Image marcoVida;
     RectTransform marcoVidaTrans;
     public Image barraVida;
-    public Image barraMana;
-    public Image barraArma;
 
     public Transform posArrI;
     public Transform posAbaD;
-
     public Transform posicionArma;
-    public int armaInicial;
+
+    public int espadaInicial = 0, armaInicial = 0;
+
     GameObject balaPrefab;
+    Sprite[] spriteEspada = new Sprite[4];
 
     float mov = 0;
     DIRECCION dir;
@@ -53,12 +61,19 @@ public class Character : MonoBehaviour {
     bool atacando = false;
     bool defendiendo = false;
 
-    float lastTimeShot = 0;
-    float timeNeededShot = 0;
-    float timeAnimationShot = 0.5f;
+    Vector2 retrocesoActual;
+    public float decrecion = 1;
+    float lerpRetroceso = 0;
+
+    float lastPunch = 0;
+    float lastTimeShot = 0, timeNeededShot = 0, timeAnimationShot = 0.5f;
+    float lastJump = 0, timeJump = 0.25f;
+
+
+    float fixedDelta;
 
     float lastTimeMana = 0;
-    float deltaMana = 0.2f;
+    float deltaReg = 0.2f;
     LayerMask layer;
 
     public AudioClip sonidoSaltar;
@@ -71,12 +86,16 @@ public class Character : MonoBehaviour {
     Rigidbody2D rigid;
     BoxCollider2D coll;
     Animator anim;
+    CharUI interfaz;
 
     void Awake () {
+        source = GetComponent<AudioSource>();
         rigid = GetComponent<Rigidbody2D>();
         coll = GetComponent<BoxCollider2D>();
         anim = GetComponent<Animator>();
-        source = GetComponent<AudioSource>();
+        interfaz = GetComponent<CharUI>();
+
+        fixedDelta = Time.fixedDeltaTime;
 
         if (marcoVida!=null) {
             marcoVidaTrans = marcoVida.GetComponent<RectTransform>();
@@ -84,23 +103,41 @@ public class Character : MonoBehaviour {
     }
 
     void Start () {
-        if(deltaMana > 0 && bando == 0)
-            InvokeRepeating("RegMana", 0, deltaMana);
+        if(deltaReg > 0 && bando == 0) {
+            InvokeRepeating("RegMana", deltaReg, deltaReg);
+            InvokeRepeating("RegEnergia", deltaReg, deltaReg);
+            InvokeRepeating("RegVida", deltaReg, deltaReg);
+        }
+            
 
-        CambiarArma(armaInicial);
+        CambiarArma(TipoArma.Espada, espadaInicial);
+        CambiarArma(TipoArma.Magia, armaInicial);
         MirarHacia(-transform.localScale.x);
+
+        ObservarNivel();
 
         if(GameManagerScript.gameManager != null) {
             layer = GameManagerScript.gameManager.layerMaskGeneral;
-            if(GameManagerScript.gameManager.personajePrincipal == null && bando == 0)
-                GameManagerScript.gameManager.personajePrincipal = this.gameObject;
+            //if(GameManagerScript.gameManager.personajes == null && bando == 0)
+            //    GameManagerScript.gameManager.personajes = this.gameObject;
         }
 
-        cuerpo.sortingOrder = ID * 5;
-        cara.sortingOrder = ID * 5 + 1;
-        mascara.sortingOrder = ID * 5 + 2;
-        escudo.sortingOrder = ID * 5 + 3;
+        if (espada!= null)
+            espada.sortingOrder = ID * 5;
+        cuerpo.sortingOrder = ID * 5 + 1;
+        cara.sortingOrder = ID * 5 + 2;
+        mascara.sortingOrder = ID * 5 + 3;
+        escudo.sortingOrder = ID * 5 + 4;
+        colorEquipo[0] = cuerpo.color;
+        colorEquipo[1] = cara.color;
+        colorEquipo[2] = mascara.color;
 
+        cuerpo.gameObject.SetActive(false);
+
+        if (interactable) {
+            internalInteractable = interactable;
+            interactable = false;
+        }
 
         if(marcoVida != null && bando > 0)
             marcoVida.gameObject.SetActive(false);
@@ -115,15 +152,17 @@ public class Character : MonoBehaviour {
             }
         }
 
-        rigid.velocity = new Vector2 (velocidad * mov * Time.fixedDeltaTime, rigid.velocity.y);
-        
-        lastTimeMana += Time.fixedDeltaTime;
-        lastTimeShot += Time.fixedDeltaTime;
+        rigid.velocity = new Vector2 (velocidad * mov, rigid.velocity.y) + retrocesoActual;
 
-        if (atacando && lastTimeShot > timeAnimationShot) {
-            anim.SetBool("Attack", false);
-            atacando = false;
+        if (retrocesoActual != Vector2.zero) {
+            retrocesoActual = Vector2.Lerp(retrocesoActual, Vector2.zero, lerpRetroceso);
+            lerpRetroceso += fixedDelta*decrecion;
         }
+
+        lastPunch += fixedDelta;
+        lastTimeMana += fixedDelta;
+        lastTimeShot += fixedDelta;
+        lastJump += fixedDelta;
 
         if(transform.position.y < -20 && vivo)
             Morir();
@@ -133,13 +172,13 @@ public class Character : MonoBehaviour {
     /// 0 quieto
     /// 1 derecha
     public void Moverse (float direccion) {
-        if(!vivo)
+        if(!interactable)
             return;
 
         mov = Mathf.Clamp(direccion, -1, 1);
 
-        if(defendiendo && mov != 0)
-            Defender(false, true);
+        //if(defendiendo && mov != 0)
+        //    Defender(false, true);
 
         MirarHacia(mov);
         
@@ -147,7 +186,7 @@ public class Character : MonoBehaviour {
     }
 
     public void MirarHacia (float direccion) {
-        if(!vivo)
+        if(!interactable)
             return;
 
         if(direccion < 0)
@@ -162,11 +201,12 @@ public class Character : MonoBehaviour {
     }
 
     public void Saltar () {
-        if(!vivo)
+        if(!interactable || lastJump<timeJump)
             return;
 
-        if(defendiendo)
-            Defender(false, true);
+        //if(defendiendo)
+        //    Defender(false, true);
+        lastJump = 0;
 
         if(enSuelo) {
             rigid.AddForce(Vector2.up * salto, ForceMode2D.Impulse);
@@ -176,30 +216,27 @@ public class Character : MonoBehaviour {
             
     }
 
-    public void Defender (bool activado, bool force = false) {
-        if ((enSuelo && mov==0)||force) {
-            defendiendo = activado;
-            anim.SetBool("Protect", activado);
-            escudo.sprite = escudoNormal;
-            escudo.gameObject.SetActive(activado);
-        }
+    public void Defender (bool activado/*, bool force = false*/) {
+        defendiendo = activado;
+        anim.SetBool("Protect", activado);
+        escudo.sprite = escudoNormal;
+        escudo.gameObject.SetActive(activado);
     }
 
     public void Disparar() {
-        if(!vivo)
+        if(!interactable)
             return;
 
-        if(defendiendo)
-            Defender(false, true);
 
         if (lastTimeShot>timeNeededShot) {
-            GameObject _balaObj = (GameObject) Instantiate(balaPrefab, posicionArma.transform.position, Quaternion.identity);
-            Weapon _balaScript = _balaObj.GetComponent<Weapon>();
+            Weapon _balaScript = balaPrefab.GetComponent<Weapon>();
 
             if (_balaScript.costeMana>manaActual) {
-                _balaScript.DestruirBala();
                 return;
             }
+
+            GameObject _balaObj = (GameObject)Instantiate(balaPrefab, posicionArma.transform.position, Quaternion.identity);
+             _balaScript = _balaObj.GetComponent<Weapon>();
 
             source.clip = sonidoDisparo;
             source.Play();
@@ -211,12 +248,25 @@ public class Character : MonoBehaviour {
             _balaScript.SetVelocidad(_balaScript.velocidad * ((dir == DIRECCION.Derecha) ? 1 : -1));
             _balaScript.transform.localScale = new Vector2((dir == DIRECCION.Derecha) ? -1 : 1, 1);
             _balaScript.origenBala = this.gameObject;
+            _balaScript.daño *= dañoBase;
+            _balaScript.retroceso *= retrocesoBase;
 
-            timeNeededShot = _balaScript.delay;
+            timeNeededShot = _balaScript.delay*delayHechizo;
 
             ConsumirMana(_balaScript.costeMana);
 
-            anim.SetBool("Attack", true);
+            anim.SetTrigger("Magic");
+
+            if (interfaz!=null) {
+                interfaz.UsarArma(TipoArma.Magia, _balaScript.delay);
+            }
+        }
+    }
+
+    public void Punch () {
+        if (lastPunch>(1/velocidadAtaque)) {
+            lastPunch = 0;
+            anim.SetTrigger("Punch");
         }
     }
 
@@ -230,7 +280,9 @@ public class Character : MonoBehaviour {
             def = 1 - defensa;
             anim.SetTrigger("Protecting");
             escudo.sprite = escudoDañado;
-            ConsumirMana(10);
+            ConsumirEnergía(costeGolpeEscudo);
+        } else {
+            StartCoroutine(CambiarColor());
         }
 
         int cantidad = Mathf.RoundToInt((float)bala.daño * def);
@@ -245,18 +297,85 @@ public class Character : MonoBehaviour {
             marcoVida.gameObject.SetActive(true);
         }
 
-        vidaActual = Mathf.Clamp(vidaActual - cantidad, 0, vidaMaxima);
-        barraVida.fillAmount = (float) vidaActual / (float) vidaMaxima;
+        if (bala.retroceso != 0) {
+            retrocesoActual += new Vector2(-Mathf.Sign(bala.transform.localScale.x) * bala.retroceso, 0);
+        }
 
+        vidaActual = Mathf.Clamp(vidaActual - cantidad, 0, vidaMaxima);
+        
+        if (interfaz!=null) {
+            interfaz.ModificarBarraVida(vidaMaxima, vidaActual, cantidad, vidaACurar);
+        } else {
+            barraVida.fillAmount = (float)vidaActual / (float)vidaMaxima;
+        }
+        
         GetAggro(bala.origenBala);
 
-        if(vidaActual == 0)
+        if(vidaActual == 0) {
+            if (bala.origenBala.GetComponent<Character>().bando==0) {
+                bala.origenBala.GetComponent<Character>().ConseguirExperiencia(nivel);
+            }
             Morir();
+        }
+            
     }
 
-    public void CurarVida (int cantidad) {
-        vidaActual = Mathf.Clamp(vidaActual - cantidad, 0, vidaMaxima);
-        barraVida.fillAmount = (float)vidaActual / (float)vidaMaxima;
+    IEnumerator CambiarColor () {
+        StopCoroutine("CambiarColor");
+        WaitForEndOfFrame wait = new WaitForEndOfFrame();
+
+        cuerpo.color = Color.red;
+        cara.color = Color.red;
+        mascara.color = Color.red;
+
+        float lerp = 0;
+        while (lerp < 1) {
+            lerp += Time.deltaTime;
+
+            cuerpo.color = Color.Lerp (cuerpo.color, colorEquipo[0], lerp);
+            cara.color = Color.Lerp(cara.color, colorEquipo[1], lerp);
+            mascara.color = Color.Lerp(mascara.color, colorEquipo[2], lerp);
+            yield return wait;
+        }
+    }
+
+    public void CurarVida (float cantidad, bool vidaPorTiempo) {
+        if (vidaPorTiempo) {
+            vidaACurar += cantidad;
+            if(interfaz != null) 
+                interfaz.ModificarBarraVida(vidaMaxima, vidaActual, 0, vidaACurar);
+        } else {
+            vidaActual = Mathf.Clamp(vidaActual + cantidad, 0, vidaMaxima);
+            interfaz.ModificarBarraVida(vidaMaxima, vidaActual, 0, vidaACurar);
+        }
+    }
+
+    public void ConseguirExperiencia (int cantidad) {
+        experiencia += cantidad;
+        if (experiencia > GameManagerScript.gameManager.GetExperienceNecessaryForNextLevel(nivel)) {
+            SubirNivel();
+        }
+        if (interfaz!=null) {
+            interfaz.ModificarBarraExperiencia(GameManagerScript.gameManager.GetExperienceNecessaryForNextLevel(nivel), experiencia);
+        }
+
+        if(interfaz == null)
+            return;
+    }
+
+    void SubirNivel () {
+        //Incluir animacion de subida de nivel, si procede.
+        ObservarNivel();
+    }
+
+    public void ObservarNivel () {
+        nivel = GameManagerScript.gameManager.GetLevel(experiencia);
+        if (interfaz!=null) {
+            interfaz.nivel.text = "Level " + nivel.ToString();
+            int dif = Mathf.Clamp (nivel - (ataque + fortaleza + proteccion + mana + energia + agilidad), 0, 60);
+            interfaz.bonus.text = (dif!=0) ? "+" + dif.ToString() : "";
+            interfaz.ModificarBarraExperiencia(GameManagerScript.gameManager.GetExperienceNecessaryForNextLevel(nivel), experiencia);
+        }
     }
 
     void Morir() {
@@ -264,14 +383,15 @@ public class Character : MonoBehaviour {
         source.Play();
 
         Moverse(0);
-        Defender(false, true);
+        Defender(false);
 
         vivo = false;
-        anim.SetBool("Dying", true);
+        interactable = false;
+        anim.SetTrigger("Morir");
         coll.enabled = true;
 
         if (bando == 0 && GameManagerScript.gameManager != null) {
-            GameManagerScript.gameManager.FinPartida();
+            GameManagerScript.gameManager.FinPartida(gameObject);
         }
 
         if(marcoVida != null && bando > 0 && marcoVida.gameObject.activeSelf)
@@ -281,19 +401,28 @@ public class Character : MonoBehaviour {
     public void ConsumirMana (float cantidad) {
         if(manaInfinito)
             return;
-        lastTimeMana = 0;
 
+        lastTimeMana = 0;
         manaActual = Mathf.Clamp (manaActual-cantidad, 0, manaMaximo);
-        if (barraMana != null) {
-            barraMana.fillAmount = manaActual / manaMaximo;
+
+        if(interfaz != null) {
+            interfaz.ModificarBarraMana(manaMaximo, manaActual);
+        }
+    }
+
+    public void ConsumirEnergía (float cantidad) {
+        energiaActual = Mathf.Clamp(energiaActual - cantidad, 0, energiaMaximo);
+
+        if(interfaz != null) {
+            interfaz.ModificarBarraEnergia(energiaMaximo, energiaActual);
         }
     }
 
     void RegMana () {
-        if(manaActual >= manaMaximo || defendiendo)
+        if(manaActual >= manaMaximo)
             return;
 
-        float regPower = (lastTimeMana < 1) ? 0 : (lastTimeMana > 3) ? 1 : (lastTimeMana - 1) / 2;
+        float regPower = (lastTimeMana < 0.5f) ? 0 : (lastTimeMana > 1) ? 1 : (lastTimeMana - 0.5f) * 2;
         
         if(regPower == 0)
             return;
@@ -301,21 +430,58 @@ public class Character : MonoBehaviour {
         if(mov != 0)
             regPower /= 2;
 
-        regPower = regMana * regPower * deltaMana;
+        regPower = regMana * regPower * deltaReg;
         manaActual = Mathf.Clamp(manaActual + regPower, 0, manaMaximo);
 
-        if(barraMana != null) {
-            barraMana.fillAmount = manaActual / manaMaximo;
+        if (interfaz!=null) {
+            interfaz.ModificarBarraMana(manaMaximo, manaActual);
         }
     }
 
-    public void CambiarArma (int nuevaArma) {
-        armaInicial = nuevaArma;
-        WeaponInfo _info = GameManagerScript.gameManager.listaObjetos.armas[nuevaArma];
+    void RegEnergia () {
+        if(defendiendo) {
+            ConsumirEnergía(costeEscudo*deltaReg);
+            if(costeEscudo*deltaReg > energiaActual)
+                Defender(false);
+        } else if((energiaActual) >= energiaMaximo) {
+            return;
+        } else {
+            energiaActual = Mathf.Clamp(energiaActual + regEnergia*deltaReg, 0, energiaMaximo);
 
-        if (barraArma != null)
-            barraArma.sprite = _info.weaponIcon;
-        balaPrefab = _info.weaponPrefab;
+            if(interfaz != null) {
+                interfaz.ModificarBarraEnergia(energiaMaximo, energiaActual);
+            }
+        }
+    }
+
+    void RegVida () {
+        if(vidaACurar == 0)
+            return;
+
+        float _reg = Mathf.Min(vidaACurar, regVida*deltaReg);
+        vidaACurar -= _reg;
+        CurarVida(_reg, false);
+    }
+
+    public void CambiarArma (TipoArma tipo, int nuevaArma) {
+        Sprite _sprite = null;
+
+        if (tipo == TipoArma.Espada) {
+            espadaInicial = nuevaArma;
+            SwordInfo _infoEspada = GameManagerScript.gameManager.listaObjetos.espadas[nuevaArma];
+            _sprite = _infoEspada.icono;
+            spriteEspada = _infoEspada.spriteArma;
+            CambiarSpriteArma(3);
+        } else if (tipo == TipoArma.Magia) {
+            armaInicial = nuevaArma;
+            WeaponInfo _info = GameManagerScript.gameManager.listaObjetos.armas[nuevaArma];
+            _sprite = _info.icono;
+            balaPrefab = _info.weaponPrefab;
+        }
+
+        if (interfaz!= null) {
+            interfaz.CambiarIcono(tipo, _sprite);
+        }
     }
 
     public void GetAggro (GameObject _objetivo) {
@@ -323,5 +489,48 @@ public class Character : MonoBehaviour {
         if (_ia!=null) {
             _ia.GetAggro(_objetivo);
         }
+    }
+
+    public void Inicializado () {
+        if(internalInteractable == true)
+            interactable = true;
+
+        anim.SetBool("Nacido", true);
+    }
+
+    public void CambiarSpriteArma (int index) {
+        index = Mathf.Clamp(index, 0, spriteEspada.Length-1);
+        if (espada != null)
+            espada.sprite = spriteEspada[index];
+    }
+
+    void ConfigurarStats () {
+        //ATAQUE
+        dañoBase = 0.95f + ataque * 0.3f + nivel * 0.05f;
+        retrocesoBase = 0.9f + ataque * 0.1f;
+
+        //FORTALEZA
+        float lastVida = vidaMaxima;
+        vidaMaxima = 90 + fortaleza * 40 + nivel * 10;
+        vidaActual = (vidaActual * vidaMaxima) / lastVida;
+        regVida = 5 + 3 * fortaleza;
+
+        //PROTECCION
+        defensa = 0.4f + proteccion * 0.04f;
+        costeEscudo = 20 - proteccion * 1f;
+        costeGolpeEscudo = 10f - proteccion * 0.5f;
+
+        //MANA
+        manaMaximo = 95 + mana * 35 + nivel * 5;
+        regMana = 20 + mana * 6;
+
+        //ENERGIA
+        energiaMaximo = 100 + energia * 20;
+        regEnergia = 10 * energia * 4;
+
+        //AGILIDAD
+        velocidad = 3.5f + agilidad * 0.1f;
+        velocidadAtaque = 0.9f + agilidad * 0.1f;
+        delayHechizo = 1.04f - agilidad * 0.04f;
     }
 }

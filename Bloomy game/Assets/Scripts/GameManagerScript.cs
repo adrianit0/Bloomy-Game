@@ -13,12 +13,17 @@ public class GameManagerScript : MonoBehaviour {
     public LayerMask layerMaskGeneral;
     public LayerMask layerDetectionEnemigo;
 
-    public GameObject personajePrincipal;
+    public SeguirPersonaje camaraScript;
+    public GameObject[] personajes;
+    public GameObject[] interfazPersonaje;
+    float countPersonajes;
     public GameObject itemPrefab;
 
     public AudioSource mainSource;
 
     public static GameManagerScript gameManager;
+
+    public int[] curvaExperiencia = new int [61];
 
     AudioSource source;
 
@@ -35,10 +40,73 @@ public class GameManagerScript : MonoBehaviour {
 
     void Start () {
         canvasGameOver.SetActive(false);
+
+        for (int i = 0; i < personajes.Length; i++) {
+            if (personajes[i].activeSelf) {
+                AñadirPersonaje(i, true);
+            }
+        }
     }
 
-    public void FinPartida () {
-        StartCoroutine(MostrarPanel(canvasGameOver, panelGameOver));
+    public int GetLevel (int experiencialTotal) {
+        for (int i = 0; i < curvaExperiencia.Length; i++) {
+            if (experiencialTotal < curvaExperiencia[i]) {
+                return (i - 1);
+            }
+        }
+
+        return 1;
+    }
+
+    public int GetExperienceNecessaryForNextLevel (int level) {
+        if (level == 60) {
+            return 0;
+        }
+        return curvaExperiencia [level+1];
+    }
+
+    void Update () {
+        if (Input.GetKeyUp (KeyCode.Return)) {
+            int cant = 0;
+            for (int i = 0; i < personajes.Length; i++) {
+                if(personajes[i].activeSelf) {
+                    cant++;
+                }
+            }
+            if(cant != personajes.Length) {
+                AñadirPersonaje(1);
+            }
+        }
+    }
+
+    public void AñadirPersonaje (int personaje, bool forzarAñadir = false) {
+        personaje = Mathf.Clamp(personaje, 0, 1);
+        int otro = (personaje == 0) ? 1 : 0;
+        if (personajes[personaje].activeSelf&&!forzarAñadir) {
+            Debug.LogWarning(string.Format("El personaje {0} está en juego.", personaje));
+            return;
+        }
+
+        countPersonajes++;
+        camaraScript.AñadirObjetivo(personajes[personaje].transform);
+        interfazPersonaje[personaje].SetActive(true);
+
+        if (!personajes[personaje].activeSelf) {
+            personajes[personaje].transform.position = new Vector3 (
+                Random.Range(personajes[otro].transform.position.x-1, personajes[otro].transform.position.x+1),
+                personajes[otro].transform.position.y,
+                personajes[otro].transform.position.z
+                );
+
+            personajes[personaje].SetActive(true);
+        }
+    }
+
+    public void FinPartida (GameObject personaje) {
+        camaraScript.EliminarObjetivo(personaje.transform);
+        countPersonajes--;
+        if (countPersonajes<=0)
+            StartCoroutine(MostrarPanel(canvasGameOver, panelGameOver));
     }
 
     public void Victoria () {

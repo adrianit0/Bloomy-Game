@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Weapon : MonoBehaviour {
 
-    public int daño = 10;
+    public float daño = 10;
     public float retroceso = 0;
     public float costeMana = 10f;
     public float delay = 0.5f;
@@ -15,11 +15,12 @@ public class Weapon : MonoBehaviour {
     float tiempoActual = 0f;
     public float distanciaMaxima = 10f; //La primera que se cumpla antes
     Vector3 distanciaInicial;
-    
 
     public Sprite[] sprites = new Sprite[2];
     public int framePerSecond = 5;
     int actualFrame = 0;
+
+    public GameObject particulasImpacto;
 
     public GameObject origenBala;
 
@@ -59,6 +60,9 @@ public class Weapon : MonoBehaviour {
     }
 
     public void DestruirBala () {
+        if (particulasImpacto!=null) {
+            Instantiate(particulasImpacto, this.transform.position, this.transform.rotation);
+        }
         Destroy(this.gameObject);
     }
 

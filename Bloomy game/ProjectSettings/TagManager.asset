@@ -19,7 +19,7 @@ TagManager:
   - Bala
   - SelectableItem
   - Escenario
-  - 
+  - UI2
   - 
   - 
   - 
@@ -53,8 +53,14 @@ TagManager:
   - name: Enemigos
     uniqueID: 3924918981
     locked: 0
+  - name: SelectableItem
+    uniqueID: 2824902267
+    locked: 0
   - name: Personaje
     uniqueID: 3569525437
+    locked: 0
+  - name: "Part\xEDculas"
+    uniqueID: 3921977497
     locked: 0
   - name: Balas
     uniqueID: 1359473171

@@ -48,7 +48,7 @@ public class Caja : MonoBehaviour {
 
         GameObject _obj = (GameObject)Instantiate(GameManagerScript.gameManager.itemPrefab, this.transform.position, Quaternion.identity);
         Objeto _item = _obj.GetComponent<Objeto>();
-        _item.CambiarArma(itemObtenido, 0);
+        _item.CambiarArma(itemObtenido, 10);
     }
 
 

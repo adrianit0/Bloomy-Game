@@ -71,11 +71,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40561f0170dec37478915916284f0e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "da\xF1o": 5
-  retroceso: 0
-  costeMana: 3
+  "da\xF1o": 15
+  retroceso: 3
+  costeMana: 8
   delay: .100000001
-  bando: 1
+  bando: 0
   velocidad: 10
   tiempoMaximo: 2
   distanciaMaxima: 15
@@ -83,6 +83,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 39b23640dd42b9743a223b0e743253ca, type: 3}
   - {fileID: 21300000, guid: b110468c7ff77b040bea84de9a62cd65, type: 3}
   framePerSecond: 6
+  particulasImpacto: {fileID: 121828, guid: a68119e3a5b0df44badde7b6f144104b, type: 2}
   origenBala: {fileID: 0}
 --- !u!212 &21284720
 SpriteRenderer:
@@ -137,7 +138,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: costeMana
-      value: 3
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: velocidad
@@ -153,8 +154,16 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: "da\xF1o"
-      value: 5
+      value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: retroceso
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: particulasImpacto
+      value: 
+      objectReference: {fileID: 121828, guid: a68119e3a5b0df44badde7b6f144104b, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 152710}
